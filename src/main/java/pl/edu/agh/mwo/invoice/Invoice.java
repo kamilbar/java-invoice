@@ -1,30 +1,55 @@
 package pl.edu.agh.mwo.invoice;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 import pl.edu.agh.mwo.invoice.product.Product;
 
 public class Invoice {
-    private Collection<Product> products;
-
+    private Map<Product, Integer> products = new LinkedHashMap<>();
+ 
     public void addProduct(Product product) {
-        // TODO: implement 
+        products.put(product, 1);
     }
 
     public void addProduct(Product product, Integer quantity) {
-        // TODO: implement
+    	if(quantity <= 0) {
+    		throw new IllegalArgumentException();
+    	}
+    	products.put(product, quantity);
     }
 
     public BigDecimal getSubtotal() {
-        return null;
+    	BigDecimal sum = new BigDecimal("0");
+    	Set<Product> keys = products.keySet();
+    	for(Product product : keys) {
+    		Integer quantity = this.products.get(product);
+    		sum = sum.add(product.getPrice().multiply(new BigDecimal(quantity)));
+    	}
+        return sum;
     }
 
     public BigDecimal getTax() {
-        return null;
+    	BigDecimal sum = new BigDecimal("0");
+    	Set<Product> keys = products.keySet();
+    	for(Product product : keys) {
+    		Integer quantity = this.products.get(product);
+    		sum = sum.add(product.getPriceWithTax().add(product.getPrice().negate()).multiply(new BigDecimal(quantity)));
+    	}
+        return sum;
     }
 
     public BigDecimal getTotal() {
-        return null;
+    	BigDecimal sum = new BigDecimal("0");
+    	Set<Product> keys = products.keySet();
+    	for(Product product : keys) {
+    		Integer quantity = this.products.get(product);
+    		sum = sum.add(product.getPriceWithTax().multiply(new BigDecimal(quantity)));
+    	}
+        return sum;
     }
 }
