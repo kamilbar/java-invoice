@@ -38,7 +38,7 @@ public class Invoice {
     	Set<Product> keys = products.keySet();
     	for(Product product : keys) {
     		Integer quantity = this.products.get(product);
-    		sum = sum.add(product.getPriceWithTax().add(product.getPrice().negate()).multiply(new BigDecimal(quantity)));
+    		sum = sum.add(product.getPriceWithTax().subtract(product.getPrice()).multiply(new BigDecimal(quantity)));
     	}
         return sum;
     }
