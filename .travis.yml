@@ -1,7 +1,4 @@
 language: java
-env:
-  global:
-    - CODECOV_TOKEN=:44410567-03ed-4f11-87b7-609b52dddfc1
 script: 
  - mvn test
 after_success:
