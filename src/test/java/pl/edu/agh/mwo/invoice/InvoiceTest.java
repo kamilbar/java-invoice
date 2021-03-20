@@ -163,5 +163,23 @@ public class InvoiceTest {
         System.setOut(standardOut);
     }
     
+    @Test
+    public void testInvoiceStructureWithProductAddedTwice() {
+    	//reasigning standard output stream to new PrintStream
+        PrintStream standardOut = System.out;
+        ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+    	System.setOut(new PrintStream(outputStreamCaptor));
+    	//assigning test invoice data
+    	int number = invoice.getNumber();
+    	invoice.addProduct(new TaxFreeProduct("Kubek", new BigDecimal("5")), 2);
+    	invoice.addProduct(new DairyProduct("Kozi Serek", new BigDecimal("10")), 3);
+    	invoice.addProduct(new TaxFreeProduct("Kubek", new BigDecimal("5")), 5);
+    	
+        invoice.printInvoice();
+        Assert.assertEquals("Faktura nr: " + number + "\r\nKubek qty: 7 price: 5\r\nKozi Serek qty: 3 price: 10\r\n\r\nLiczba pozycji: 2", outputStreamCaptor.toString().trim());
+        
+        //restoring to original state
+        System.setOut(standardOut);
+    }
     
 }
