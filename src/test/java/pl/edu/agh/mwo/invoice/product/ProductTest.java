@@ -62,8 +62,9 @@ public class ProductTest {
     }
     
     @Test
-    public void testFuelCanisterPriceWithTaxAndExciseTax() {
+    public void testFuelCanisterAndTaxWithExciseTax() {
         Product product = new FuelCanister("Paliwo", new BigDecimal("200.0"));
         Assert.assertThat(new BigDecimal("251.56"), Matchers.comparesEqualTo(product.getPriceWithTax()));
+        Assert.assertThat(new BigDecimal("5.56"), Matchers.comparesEqualTo(product.getExciseTaxRate()));
     }
 }
