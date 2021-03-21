@@ -10,7 +10,7 @@ import pl.edu.agh.mwo.invoice.product.Product;
 public class Invoice {
     private final int number = Math.abs(new Random().nextInt());
 	private Map<Product, Integer> products = new HashMap<Product, Integer>();
-
+	
     public Map<Product, Integer> getProducts() {
 		return products;
 	}
@@ -19,12 +19,28 @@ public class Invoice {
         addProduct(product, 1);
     }
 
-    public void addProduct(Product product, Integer quantity) {
-        if (product == null || quantity <= 0) {
+    public void addProduct(Product product, Integer addedQuantity) {
+        if (product == null || addedQuantity <= 0) {
             throw new IllegalArgumentException();
         }
-        products.put(product, quantity);
+        Product productAlreadyOnTheInvoice = findProductByNameFromInvoice(product.getName());
+        if (productAlreadyOnTheInvoice != null) {
+        	products.replace(productAlreadyOnTheInvoice, this.getProducts().get(productAlreadyOnTheInvoice) + addedQuantity);
+        } else {
+        	products.put(product, addedQuantity);
+        }
     }
+	    private Product findProductByNameFromInvoice(String productName) {
+	    	if (this.getProducts().size() == 0) {
+	    		return null;
+	    	}
+	    	for (Map.Entry<Product, Integer> set : products.entrySet()) {
+	    		if (set.getKey().getName().equals(productName)){
+	    			return set.getKey();
+	    		}
+	    	}
+	    	return null;
+	    }
 
     public BigDecimal getNetTotal() {
         BigDecimal totalNet = BigDecimal.ZERO;
