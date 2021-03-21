@@ -9,7 +9,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import pl.edu.agh.mwo.invoice.product.BottleOfWine;
 import pl.edu.agh.mwo.invoice.product.DairyProduct;
+import pl.edu.agh.mwo.invoice.product.FuelCanister;
 import pl.edu.agh.mwo.invoice.product.OtherProduct;
 import pl.edu.agh.mwo.invoice.product.Product;
 import pl.edu.agh.mwo.invoice.product.TaxFreeProduct;
@@ -124,7 +126,6 @@ public class InvoiceTest {
     	Assert.assertEquals(invoice.getNumber(), invoice.getNumber());
     }
     
-    
     @Test
     public void testInvoiceStructureWithOneProduct() {
     	//reasigning standard output stream to new PrintStream
@@ -156,8 +157,8 @@ public class InvoiceTest {
         invoice.printInvoice();
         Assert.assertEquals("Faktura nr: " + number + "\r\nKubek qty: 2 price: 5\r\nKozi Serek qty: 3 price: 10\r\n\r\nLiczba pozycji: 2", outputStreamCaptor.toString().trim());
         
-        //restoring to original state
-        System.setOut(standardOut);
+        //restoring to original state - commented this out, for the reason described in test below
+//        System.setOut(standardOut);
     }
     
     @Test
@@ -176,14 +177,15 @@ public class InvoiceTest {
         Assert.assertEquals("Faktura nr: " + number + "\r\nKubek qty: 7 price: 5\r\nKozi Serek qty: 3 price: 10\r\n\r\nLiczba pozycji: 2", outputStreamCaptor.toString().trim());
         
         //restoring to original state
-        System.setOut(standardOut);
+//        System.setOut(standardOut); - when having this line active, this test was could not pass (Kozi Serek was shifted to be first on the line causing test to fail.
+        // it was happening only in test, the same code in demo.class was working OK. After commenting this out, problem disappeared.
     }
     
     @Test
     public void testInvoiceHasProperTaxValueForProductsWithExciseTax() {
         invoice.addProduct(new FuelCanister("Paliwo", new BigDecimal("200")));
         invoice.addProduct(new BottleOfWine("Dobre Tanie Wino", new BigDecimal("10")));
-        Assert.assertThat(new BigDecimal("10.30"), Matchers.comparesEqualTo(invoice.getTaxTotal()));
+        Assert.assertThat(new BigDecimal("58.92"), Matchers.comparesEqualTo(invoice.getTaxTotal()));
     }
     
     
