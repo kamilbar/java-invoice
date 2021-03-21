@@ -48,7 +48,7 @@ public class InvoiceTest {
     public void testInvoiceHasProperSubtotalForManyProducts() {
         invoice.addProduct(new TaxFreeProduct("Owoce", new BigDecimal("200")));
         invoice.addProduct(new DairyProduct("Maslanka", new BigDecimal("100")));
-        invoice.addProduct(new OtherProduct("Wino", new BigDecimal("10")));
+        invoice.addProduct(new BottleOfWine ("Wino", new BigDecimal("10")));
         Assert.assertThat(new BigDecimal("310"), Matchers.comparesEqualTo(invoice.getNetTotal()));
     }
 
@@ -178,5 +178,13 @@ public class InvoiceTest {
         //restoring to original state
         System.setOut(standardOut);
     }
+    
+    @Test
+    public void testInvoiceHasProperTaxValueForProductsWithExciseTax() {
+        invoice.addProduct(new FuelCanister("Paliwo", new BigDecimal("200")));
+        invoice.addProduct(new BottleOfWine("Dobre Tanie Wino", new BigDecimal("10")));
+        Assert.assertThat(new BigDecimal("10.30"), Matchers.comparesEqualTo(invoice.getTaxTotal()));
+    }
+    
     
 }
